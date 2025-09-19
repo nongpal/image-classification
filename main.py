@@ -13,7 +13,7 @@ from src.train import fit, test
 def main(path: str):
 
     if not glob.glob(os.path.join(path, "*.csv")):
-        utils.make_file(path, is_split=True, output_dir="data/Aerial_Landscapes")
+        utils.make_file(path, is_split=True, output_dir=path)
 
     train_transform = A.Compose([
         A.ToFloat(),
