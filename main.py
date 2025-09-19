@@ -1,19 +1,20 @@
 import os
 import glob
+import argparse
 import torch
 import torch.nn as nn
 import albumentations as A
+
 from src import utils
 from src.processing import AerialData, get_dataloader
 from src.model import Model
 from src.train import fit, test
 
-path = "data/Aerial_Landscapes"
+def main(path: str):
 
-if not glob.glob(os.path.join(path, "*.csv")):
-    utils.make_file(path, is_split=True, output_dir="data/Aerial_Landscapes")
+    if not glob.glob(os.path.join(path, "*.csv")):
+        utils.make_file(path, is_split=True, output_dir="data/Aerial_Landscapes")
 
-def main():
     train_transform = A.Compose([
         A.ToFloat(),
         A.ToTensorV2(),
@@ -34,4 +35,7 @@ def main():
     fit(10, train_dataloader, valid_dataloader, model, loss_fn, optimizer)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("path", desc="Path to data directory.")
+    args = parser.parse_args()
+    main(args.path)
