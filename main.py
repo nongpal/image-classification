@@ -4,6 +4,7 @@ import argparse
 import torch
 import torch.nn as nn
 import albumentations as A
+from albumentations.pytorch import ToTensorV2
 
 from src import utils
 from src.processing import AerialData, get_dataloader
@@ -13,19 +14,19 @@ from src.train import fit, test
 def main(path: str):
 
     device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
-    print(f"Using {device} device")
     torch.set_default_device(device)
+    print(F"Using {torch.get_default_device()} device.")
 
     if not glob.glob(os.path.join(path, "*.csv")):
         utils.make_file(path, is_split=True, output_dir=path)
 
     train_transform = A.Compose([
         A.ToFloat(),
-        A.ToTensorV2(),
+        ToTensorV2(),
     ])
     test_transform = A.Compose([
         A.ToFloat(),
-        A.ToTensorV2(),
+        ToTensorV2(),
     ])
 
     train_dataloader = get_dataloader(AerialData(f"{path}/train.csv", train_transform))
