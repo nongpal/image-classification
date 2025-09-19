@@ -12,6 +12,10 @@ from src.train import fit, test
 
 def main(path: str):
 
+    device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
+    print(f"Using {device} device")
+    torch.set_default_device(device)
+
     if not glob.glob(os.path.join(path, "*.csv")):
         utils.make_file(path, is_split=True, output_dir=path)
 
