@@ -14,8 +14,7 @@ from src.train import fit, test
 def main(path: str):
 
     device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
-    torch.set_default_device(device)
-    print(F"Using {torch.get_default_device()} device.")
+    print(F"Using {device} device.")
 
     if not glob.glob(os.path.join(path, "*.csv")):
         utils.make_file(path, is_split=True, output_dir=path)
@@ -33,11 +32,11 @@ def main(path: str):
     valid_dataloader = get_dataloader(AerialData(f"{path}/val.csv", test_transform), device=device)
     test_dataloader = get_dataloader(AerialData(f"{path}/test.csv", test_transform), device=device)
 
-    model = Model(3, 15)
+    model = Model(3, 15).to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-2)
 
-    fit(10, train_dataloader, valid_dataloader, model, loss_fn, optimizer)
+    fit(10, train_dataloader, valid_dataloader, model, loss_fn, optimizer, device)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

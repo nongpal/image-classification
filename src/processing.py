@@ -33,6 +33,5 @@ def get_dataloader(data: Dataset, batch_size: int = 32, shuffle: bool = True, nu
         batch_size=batch_size, 
         shuffle=shuffle, 
         num_workers=num_workers, 
-        generator=torch.Generator(device=device),
         **kwargs
     )
