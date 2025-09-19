@@ -1,5 +1,6 @@
 import cv2
 import pandas as pd
+import torch
 import albumentations as A
 from torch.utils.data import Dataset, DataLoader
 
@@ -26,5 +27,12 @@ class AerialData(Dataset):
 
         return img, label
 
-def get_dataloader(data: Dataset, batch_size: int = 32, shuffle: bool = True, num_workers: int = 4, **kwargs) -> DataLoader:
-    return DataLoader(data, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers, **kwargs)
+def get_dataloader(data: Dataset, batch_size: int = 32, shuffle: bool = True, num_workers: int = 4, device = "cpu", **kwargs) -> DataLoader:
+    return DataLoader(
+        data, 
+        batch_size=batch_size, 
+        shuffle=shuffle, 
+        num_workers=num_workers, 
+        generator=torch.Generator(device=device),
+        **kwargs
+    )

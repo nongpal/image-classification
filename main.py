@@ -29,9 +29,9 @@ def main(path: str):
         ToTensorV2(),
     ])
 
-    train_dataloader = get_dataloader(AerialData(f"{path}/train.csv", train_transform))
-    valid_dataloader = get_dataloader(AerialData(f"{path}/val.csv", test_transform))
-    test_dataloader = get_dataloader(AerialData(f"{path}/test.csv", test_transform))
+    train_dataloader = get_dataloader(AerialData(f"{path}/train.csv", train_transform), device=device)
+    valid_dataloader = get_dataloader(AerialData(f"{path}/val.csv", test_transform), device=device)
+    test_dataloader = get_dataloader(AerialData(f"{path}/test.csv", test_transform), device=device)
 
     model = Model(3, 15)
     loss_fn = nn.CrossEntropyLoss()
