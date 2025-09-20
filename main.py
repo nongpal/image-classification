@@ -20,11 +20,16 @@ def main(path: str):
         utils.make_file(path, is_split=True, output_dir=path)
 
     train_transform = A.Compose([
-        A.ToFloat(),
+        A.RandomCrop(height=256, width=256, p=1.0),
+        A.HorizontalFlip(),
+        A.CoarseDropout(),
+        A.Affine(scale=(0.8, 1.2), rotate=(-15, 15), p=0.7),
+        A.SquareSymmetry(),
+        A.Normalize(),
         ToTensorV2(),
     ])
     test_transform = A.Compose([
-        A.ToFloat(),
+        A.Normalize(),
         ToTensorV2(),
     ])
 
