@@ -21,9 +21,9 @@ def main(path: str, epochs: int):
 
     train_transform = A.Compose([
         #A.RandomCrop(height=256, width=256, p=1.0),
-        #A.HorizontalFlip(),
-        #A.CoarseDropout(),
-        #A.Affine(scale=(0.8, 1.2), rotate=(-15, 15), p=0.7),
+        A.HorizontalFlip(),
+        A.CoarseDropout(),
+        A.Affine(scale=(0.8, 1.2), rotate=(-15, 15), p=0.7),
         A.SquareSymmetry(),
         A.Normalize(),
         ToTensorV2(),
