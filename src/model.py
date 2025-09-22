@@ -75,7 +75,7 @@ class DenseNet(nn.Module):
                     activation,
                 )
             )
-            hidden_size += layers + growth_rate
+            hidden_size += layers * growth_rate
             if block_idx < len(n_layers) - 1:
                 blocks.append(
                     TransitionLayer(
