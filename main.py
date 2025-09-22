@@ -8,7 +8,7 @@ from albumentations.pytorch import ToTensorV2
 
 from src import utils
 from src.processing import AerialData, get_dataloader
-from src.model import DenseNet
+from src.model import ResNet
 from src.train import fit, test
 
 def main(path: str):
@@ -37,9 +37,12 @@ def main(path: str):
     valid_dataloader = get_dataloader(AerialData(f"{path}/val.csv", test_transform), device=device)
     test_dataloader = get_dataloader(AerialData(f"{path}/test.csv", test_transform), device=device)
 
-    model = DenseNet(input_size=3, n_classes=15).to(device)
+    model = ResNet(n_classes=15).to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
+
+    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"\nTotal params: {total_params}")
 
     fit(1, train_dataloader, valid_dataloader, model, loss_fn, optimizer, device)
 
