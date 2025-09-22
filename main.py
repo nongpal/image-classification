@@ -44,7 +44,7 @@ def main(path: str, epochs: int):
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"\nTotal params: {total_params}")
 
-    fit(epochs, train_dataloader, valid_dataloader, model, loss_fn, optimizer, device)
+    fit(int(epochs), train_dataloader, valid_dataloader, model, loss_fn, optimizer, device)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
