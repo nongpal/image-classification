@@ -11,7 +11,7 @@ from src.processing import AerialData, get_dataloader
 from src.model import ResNet
 from src.train import fit, test
 
-def main(path: str):
+def main(path: str, epochs: int):
 
     device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
     print(F"Using {device} device.")
@@ -44,11 +44,11 @@ def main(path: str):
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"\nTotal params: {total_params}")
 
-    fit(1, train_dataloader, valid_dataloader, model, loss_fn, optimizer, device)
+    fit(epochs, train_dataloader, valid_dataloader, model, loss_fn, optimizer, device)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--path", help="Path to data directory.")
     parser.add_argument("--epochs", default=1)
     args = parser.parse_args()
-    main(args.path)
+    main(args.path, args.epochs)
