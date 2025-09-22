@@ -20,7 +20,6 @@ def main(path: str, epochs: int):
         utils.make_file(path, is_split=True, output_dir=path)
 
     train_transform = A.Compose([
-        A.RandomCrop(height=224, width=224, p=1.0),
         A.Resize(256, 256),
         A.SquareSymmetry(),
         A.Normalize(),
