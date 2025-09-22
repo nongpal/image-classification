@@ -20,10 +20,8 @@ def main(path: str, epochs: int):
         utils.make_file(path, is_split=True, output_dir=path)
 
     train_transform = A.Compose([
-        #A.RandomCrop(height=256, width=256, p=1.0),
-        A.HorizontalFlip(),
-        A.CoarseDropout(),
-        A.Affine(scale=(0.8, 1.2), rotate=(-15, 15), p=0.7),
+        A.RandomCrop(height=224, width=224, p=1.0),
+        A.Resize(256, 256),
         A.SquareSymmetry(),
         A.Normalize(),
         ToTensorV2(),
@@ -37,9 +35,9 @@ def main(path: str, epochs: int):
     valid_dataloader = get_dataloader(AerialData(f"{path}/val.csv", test_transform), device=device)
     test_dataloader = get_dataloader(AerialData(f"{path}/test.csv", test_transform), device=device)
 
-    model = ResNet(n_classes=15).to(device)
+    model = ResNet(n_classes=15, n_blocks=[6, 6, 6], hidden_size=[64, 128, 256]).to(device)
     loss_fn = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-2, weight_decay=1e-4)
 
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"\nTotal params: {total_params}")

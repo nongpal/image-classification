@@ -2,24 +2,18 @@ import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-def get_labels(path: str) -> list[str]:
-    return [i for i in os.listdir(path) if os.path.isdir(os.path.join(path, i))]
+def make_file(path: str, is_split: bool = False, output_dir: str = "."):
+    labels = [i for i in os.listdir(path) if os.path.isdir(os.path.join(path, i))]
 
-def get_data_path(path: str, labels: list[str]) -> tuple[list[str], list[str]]:
-    all_labels = list()
-    all_paths = list()
+    data_paths = list()
+    data_labels = list()
 
     for label in labels:
         folder = os.path.join(path, label)
         for file in os.listdir(folder):
             if file.endswith((".png", ".jpg", ".jpeg")):
-                all_paths.append(os.path.join(folder, file))
-                all_labels.append(label)
-    return all_paths, all_labels
-
-def make_file(path: str, is_split: bool = False, output_dir: str = "."):
-    labels = get_labels(path)
-    data_paths, data_labels = get_data_path(path, labels)
+                data_paths.append(os.path.join(folder, file))
+                data_labels.append(label)
 
     df = pd.DataFrame({"data_path": data_paths, "label": data_labels})
 
