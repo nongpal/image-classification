@@ -8,7 +8,7 @@ from albumentations.pytorch import ToTensorV2
 
 from src import utils
 from src.processing import AerialData, get_dataloader
-from src.model import Model
+from src.model import DenseNet
 from src.train import fit, test
 
 def main(path: str):
@@ -37,14 +37,14 @@ def main(path: str):
     valid_dataloader = get_dataloader(AerialData(f"{path}/val.csv", test_transform), device=device)
     test_dataloader = get_dataloader(AerialData(f"{path}/test.csv", test_transform), device=device)
 
-    model = Model(3, 15).to(device)
+    model = DenseNet(input_size=3, n_classes=15).to(device)
     loss_fn = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=1e-2)
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
 
-    fit(10, train_dataloader, valid_dataloader, model, loss_fn, optimizer, device)
+    fit(1, train_dataloader, valid_dataloader, model, loss_fn, optimizer, device)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("path", help="Path to data directory.")
+    parser.add_argument("--path", help="Path to data directory.")
     args = parser.parse_args()
     main(args.path)
