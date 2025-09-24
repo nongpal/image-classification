@@ -9,7 +9,7 @@ from albumentations.pytorch import ToTensorV2
 from src import utils
 from src.processing import AerialData, get_dataloader
 from src.model import ResNet
-from src.train import fit, test
+from src.train import fit, test, prediction
 
 def main(path: str, epochs: int):
 
@@ -30,9 +30,9 @@ def main(path: str, epochs: int):
         ToTensorV2(),
     ])
 
-    train_dataloader = get_dataloader(AerialData(f"{path}/train.csv", train_transform), device=device)
-    valid_dataloader = get_dataloader(AerialData(f"{path}/val.csv", test_transform), device=device)
-    test_dataloader = get_dataloader(AerialData(f"{path}/test.csv", test_transform), device=device)
+    train_dataloader, classes = get_dataloader(AerialData(f"{path}/train.csv", train_transform), device=device)
+    valid_dataloader, _ = get_dataloader(AerialData(f"{path}/val.csv", test_transform), device=device)
+    test_dataloader, _ = get_dataloader(AerialData(f"{path}/test.csv", test_transform), device=device)
 
     model = ResNet(n_classes=15, n_blocks=[6, 6, 6], hidden_size=[32, 64, 128]).to(device)
     loss_fn = nn.CrossEntropyLoss()
@@ -42,6 +42,11 @@ def main(path: str, epochs: int):
     print(f"\nTotal params: {total_params}")
 
     fit(int(epochs), train_dataloader, valid_dataloader, model, loss_fn, optimizer, device)
+
+    testing_acc, testing_loss = test(test_dataloader, model, loss_fn, device)
+    print(F"Testing score: \nAccuracy: {(testing_acc*100):>0.1f}% | Avg. loss: {testing_loss:8f} \n")
+    
+    prediction(model, test_dataloader, classes, device)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
