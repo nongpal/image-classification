@@ -30,9 +30,9 @@ def main(path: str, epochs: int):
         ToTensorV2(),
     ])
 
-    train_dataloader, classes = get_dataloader(AerialData(f"{path}/train.csv", train_transform), device=device)
-    valid_dataloader, _ = get_dataloader(AerialData(f"{path}/val.csv", test_transform), device=device)
-    test_dataloader, _ = get_dataloader(AerialData(f"{path}/test.csv", test_transform), device=device)
+    train_dataloader, classes = get_dataloader(AerialData(f"{path}/train.csv", train_transform))
+    valid_dataloader, _ = get_dataloader(AerialData(f"{path}/val.csv", test_transform))
+    test_dataloader, _ = get_dataloader(AerialData(f"{path}/test.csv", test_transform))
 
     model = ResNet(n_classes=15, n_blocks=[6, 6, 6], hidden_size=[32, 64, 128]).to(device)
     loss_fn = nn.CrossEntropyLoss()
