@@ -21,7 +21,7 @@ def make_file(path: str, is_split: bool = False, output_dir: str = "."):
         df.to_csv(os.path.join(output_dir, "dataset.csv"), index=False)
         return df
 
-    train_df, temp_df = train_test_split(df, test_size=0.3, stratify=df["label"], random_state=42)
+    train_df, temp_df = train_test_split(df, test_size=0.1, stratify=df["label"], random_state=42)
     val_df, test_df = train_test_split(temp_df, test_size=0.5, stratify=temp_df["label"], random_state=42)
 
     train_df.to_csv(os.path.join(output_dir, "train.csv"), index=False)

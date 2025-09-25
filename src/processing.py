@@ -1,11 +1,10 @@
-import cv2
+from PIL import Image
 import pandas as pd
-import torch
-import albumentations as A
+import torchvision.transforms as T
 from torch.utils.data import Dataset, DataLoader
 
 class AerialData(Dataset):
-    def __init__(self, path_csv: str, transform: A.Compose | None = None) -> None:
+    def __init__(self, path_csv: str, transform: T.Compose | None = None) -> None:
         self.image_sample = pd.read_csv(path_csv)
         self.transform = transform
 
@@ -16,18 +15,17 @@ class AerialData(Dataset):
         return len(self.image_sample)
 
     def __getitem__(self, idx):
-        img = cv2.imread(self.image_sample.iloc[idx, 0])
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = Image.open(self.image_sample.iloc[idx, 0])
 
         label = self.image_sample.iloc[idx, 1]
         label = self.class_to_idx[label]
 
         if self.transform:
-            img = self.transform(image=img)["image"]
+            img = self.transform(img)
 
         return img, label
 
-def get_dataloader(data: Dataset, batch_size: int = 32, shuffle: bool = True, num_workers: int = 4, **kwargs) -> tuple[DataLoader, list[str]]:
+def get_dataloader(data: Dataset, batch_size: int = 32, shuffle: bool = True, num_workers: int = 4, **kwargs) -> tuple[DataLoader, int]:
     return DataLoader(
         data, 
         batch_size=batch_size, 
