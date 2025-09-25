@@ -22,7 +22,6 @@ class AerialData(Dataset):
 
         if self.tsform:
             img = self.tsform(img)
-            print("After transform:", type(img))
 
         return img, label
 
