@@ -7,7 +7,7 @@ def train(dataloader, model, optimizer, loss_fn, device) -> tuple[float, float]:
     n_batches = len(dataloader)
     losses, correct = 0, 0
     model.train()
-    for X, y in dataloader:
+    for X, y in tqdm(dataloader, desc="Training", unit="Batch"):
         X = X.to(device)
         y = y.to(device)
 
@@ -34,7 +34,7 @@ def test(dataloader, model, loss_fn, device):
     losses, correct = 0, 0
 
     with torch.no_grad():
-        for X, y in dataloader:
+        for X, y in tqdm(dataloader, desc="Testing", unit="batch"):
             X = X.to(device)
             y = y.to(device)
             pred = model(X)
@@ -54,7 +54,7 @@ def fit(epochs, train_dataloader, valid_dataloader, model, loss_fn, optimizer, d
         "val_accuracy": [],
     }
 
-    for t in tqdm(range(epochs)):
+    for t in range(epochs):
         print(F"Epoch {t+1}\n")
         train_acc, train_loss = train(train_dataloader, model, optimizer, loss_fn, device)
         print(f"Train: \n Accuracy: {(100*train_acc):>0.1f}%, Avg. loss: {train_loss:>8f} \n")

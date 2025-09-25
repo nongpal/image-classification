@@ -15,7 +15,7 @@ class AerialData(Dataset):
         return len(self.image_sample)
 
     def __getitem__(self, idx):
-        img = Image.open(self.image_sample.iloc[idx, 0])
+        img = Image.open(self.image_sample.iloc[idx, 0]).convert("RGB")
 
         label = self.image_sample.iloc[idx, 1]
         label = self.class_to_idx[label]
