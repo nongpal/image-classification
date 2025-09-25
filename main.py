@@ -34,7 +34,7 @@ def main(path: str, epochs: int):
     valid_dataloader, _ = get_dataloader(AerialData(f"{path}/val.csv", test_transform))
     test_dataloader, _ = get_dataloader(AerialData(f"{path}/test.csv", test_transform))
 
-    model = ResNet(n_classes=15, n_blocks=[6, 6, 6], hidden_size=[32, 64, 128]).to(device)
+    model = ResNet(num_classes=15).to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-2, weight_decay=1e-4)
 
