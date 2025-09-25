@@ -6,7 +6,7 @@ from torch.utils.data import Dataset, DataLoader
 class AerialData(Dataset):
     def __init__(self, path_csv: str, transform: T.Compose | None = None) -> None:
         self.image_sample = pd.read_csv(path_csv)
-        self.transform = transform
+        self.tsform = transform
 
         self.classes = sorted(self.image_sample["label"].unique())
         self.class_to_idx = {s: i for i, s in enumerate(self.classes)}
@@ -20,8 +20,9 @@ class AerialData(Dataset):
         label = self.image_sample.iloc[idx, 1]
         label = self.class_to_idx[label]
 
-        if self.transform:
-            img = self.transform(img)
+        if self.tsform:
+            img = self.tsform(img)
+            print("After transform:", type(img))
 
         return img, label
 
