@@ -10,7 +10,7 @@ from src.processing import AerialData, get_dataloader
 from src.model import ResNet
 from src.train import fit, test, prediction
 
-def main(path: str, epochs: int):
+def main(path: str, epochs: int, num_workers: int):
 
     device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
     print(F"Using {device} device.")
@@ -29,9 +29,9 @@ def main(path: str, epochs: int):
         T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
 
-    train_dataloader, classes = get_dataloader(AerialData(f"{path}/train.csv", train_transform), num_workers=os.cpu_count())
-    valid_dataloader, _ = get_dataloader(AerialData(f"{path}/val.csv", test_transform), shuffle=False, num_workers=os.cpu_count())
-    test_dataloader, _ = get_dataloader(AerialData(f"{path}/test.csv", test_transform), shuffle=False, num_workers=os.cpu_count())
+    train_dataloader, classes = get_dataloader(AerialData(f"{path}/train.csv", train_transform), num_workers=num_workers)
+    valid_dataloader, _ = get_dataloader(AerialData(f"{path}/val.csv", test_transform), shuffle=False, num_workers=num_workers)
+    test_dataloader, _ = get_dataloader(AerialData(f"{path}/test.csv", test_transform), shuffle=False, num_workers=num_workers)
 
     model = ResNet(num_classes=len(classes)).to(device)
     loss_fn = nn.CrossEntropyLoss()
@@ -40,7 +40,7 @@ def main(path: str, epochs: int):
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"\nTotal params: {total_params}")
 
-    fit(int(epochs), train_dataloader, valid_dataloader, model, loss_fn, optimizer, device)
+    fit(epochs, train_dataloader, valid_dataloader, model, loss_fn, optimizer, device)
 
     testing_acc, testing_loss = test(test_dataloader, model, loss_fn, device)
     print(F"Testing score: \nAccuracy: {(testing_acc*100):>0.1f}% | Avg. loss: {testing_loss:8f} \n")
@@ -49,7 +49,8 @@ def main(path: str, epochs: int):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--path", help="Path to data directory.")
-    parser.add_argument("--epochs", default=1)
+    parser.add_argument("--path", help="Path to data directory.", type=str)
+    parser.add_argument("--epochs", default=1, type=int)
+    parser.add_argument("--num_workers", default=1, type=int)
     args = parser.parse_args()
-    main(args.path, args.epochs)
+    main(args.path, args.epochs, args.num_workers)

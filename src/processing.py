@@ -26,11 +26,11 @@ class AerialData(Dataset):
 
         return img, label
 
-def get_dataloader(data: Dataset, batch_size: int = 32, shuffle: bool = True, num_workers: int = 4, **kwargs) -> tuple[DataLoader, int]:
+def get_dataloader(data: Dataset, batch_size: int = 32, shuffle: bool = True, num_workers: int = 4, **kwargs) -> tuple[DataLoader, list[str]]:
     return DataLoader(
         data, 
         batch_size=batch_size, 
         shuffle=shuffle, 
-        num_workers=num_workers if num_workers < 46 else 46, 
+        num_workers=num_workers, 
         **kwargs
     ), data.classes
