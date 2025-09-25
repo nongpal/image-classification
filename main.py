@@ -20,13 +20,13 @@ def main(path: str, epochs: int):
 
     train_transform = T.Compose([
         T.Resize((256, 256)),
-        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         T.ToTensor(),
+        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
     test_transform = T.Compose([
         T.Resize((256, 256)),
-        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         T.ToTensor(),
+        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
 
     train_dataloader, classes = get_dataloader(AerialData(f"{path}/train.csv", train_transform), num_workers=os.cpu_count())

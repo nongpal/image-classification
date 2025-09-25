@@ -30,6 +30,6 @@ def get_dataloader(data: Dataset, batch_size: int = 32, shuffle: bool = True, nu
         data, 
         batch_size=batch_size, 
         shuffle=shuffle, 
-        num_workers=num_workers, 
+        num_workers=num_workers if num_workers < 46 else 46, 
         **kwargs
     ), data.classes
