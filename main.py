@@ -8,8 +8,8 @@ import torchvision.transforms as T
 from src import utils
 from src.processing import AerialData, get_dataloader
 from src.model import ResNet
-from src.train import fit, test, prediction
-from visualize import metrics_plotting
+from src.train import fit, test
+from visualize import metrics_plotting, visualize_predictions
 
 def main(path: str, epochs: int, num_workers: int):
 
@@ -48,7 +48,7 @@ def main(path: str, epochs: int, num_workers: int):
 
     metrics_plotting(results)
     
-    prediction(model, test_dataloader, classes, device)
+    visualize_predictions(model, test_dataloader, classes, device)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
