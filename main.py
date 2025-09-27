@@ -9,6 +9,7 @@ from src import utils
 from src.processing import AerialData, get_dataloader
 from src.model import ResNet
 from src.train import fit, test, prediction
+from visualize import metrics_plotting
 
 def main(path: str, epochs: int, num_workers: int):
 
@@ -40,10 +41,12 @@ def main(path: str, epochs: int, num_workers: int):
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"\nTotal params: {total_params}")
 
-    fit(epochs, train_dataloader, valid_dataloader, model, loss_fn, optimizer, device)
+    results = fit(epochs, train_dataloader, valid_dataloader, model, loss_fn, optimizer, device)
 
     testing_acc, testing_loss = test(test_dataloader, model, loss_fn, device)
     print(F"Testing score: \nAccuracy: {(testing_acc*100):>0.1f}% | Avg. loss: {testing_loss:8f} \n")
+
+    metrics_plotting(results)
     
     prediction(model, test_dataloader, classes, device)
 
