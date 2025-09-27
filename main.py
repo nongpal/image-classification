@@ -46,6 +46,10 @@ def main(path: str, epochs: int, num_workers: int):
     testing_acc, testing_loss = test(test_dataloader, model, loss_fn, device)
     print(F"Testing score: \nAccuracy: {(testing_acc*100):>0.1f}% | Avg. loss: {testing_loss:8f} \n")
 
+    if not os.path.isdir("assets"):
+        print("Create folder 'assets' for store visualization")
+        os.mkdir("assets")
+
     metrics_plotting(results)
     
     visualize_predictions(model, test_dataloader, classes, device)
