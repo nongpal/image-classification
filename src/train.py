@@ -1,8 +1,26 @@
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import torch
+import torch.nn as nn
 
-def train(dataloader, model, optimizer, loss_fn, device) -> tuple[float, float]:
+def train(dataloader, model: nn.Module, optimizer: torch.optim.Optimizer, loss_fn: nn.Module, device: torch.device) -> tuple[float, float]:
+    """
+    Train the model for one epoch.
+
+    Iterates over the training dataloader, performs forward and backward passes,
+    updates model parameters using the optimizer, and computes average loss
+    and accuracy for the epoch.
+
+    Args:
+        dataloader (torch.utils.data.DataLoader): DataLoader for training dataset.
+        model (torch.nn.Module): Model to be trained.
+        optimizer (torch.optim.Optimizer): Optimizer for updating model parameters.
+        loss_fn (torch.nn.Module): Loss function to minimize.
+        device (str or torch.device): Device to run computations on.
+
+    Returns:
+        tuple[float, float]: (accuracy, average_loss) for the training epoch.
+    """
     size = len(dataloader.dataset)
     n_batches = len(dataloader)
     losses, correct = 0, 0
@@ -27,7 +45,22 @@ def train(dataloader, model, optimizer, loss_fn, device) -> tuple[float, float]:
 
     return correct, losses
 
-def test(dataloader, model, loss_fn, device):
+def test(dataloader, model: nn.Module, loss_fn: nn.Module, device: torch.device) -> tuple[float, float]:
+    """
+    Evaluate the model on validation or test data.
+
+    Disables gradient computation, runs the model on the dataloader,
+    and calculates average loss and accuracy.
+
+    Args:
+        dataloader (torch.utils.data.DataLoader): DataLoader for validation or test dataset.
+        model (torch.nn.Module): Trained model to evaluate.
+        loss_fn (torch.nn.Module): Loss function for evaluation.
+        device (str or torch.device): Device to run computations on.
+
+    Returns:
+        tuple[float, float]: (accuracy, average_loss) for the evaluation.
+    """
     model.eval()
     size = len(dataloader.dataset)
     n_batches = len(dataloader)
@@ -46,7 +79,29 @@ def test(dataloader, model, loss_fn, device):
 
     return correct, losses
 
-def fit(epochs, train_dataloader, valid_dataloader, model, loss_fn, optimizer, device):
+def fit(epochs: int, train_dataloader, valid_dataloader, model: nn.Module, loss_fn: nn.Module, optimizer: torch.optim.Optimizer, device: torch.device) -> dict:
+    """
+    Train and validate the model over multiple epochs.
+
+    For each epoch, trains the model on the training set and evaluates it
+    on the validation set. Tracks metrics (loss and accuracy) for both sets.
+
+    Args:
+        epochs (int): Number of training epochs.
+        train_dataloader (torch.utils.data.DataLoader): DataLoader for training dataset.
+        valid_dataloader (torch.utils.data.DataLoader): DataLoader for validation dataset.
+        model (torch.nn.Module): Model to train and validate.
+        loss_fn (torch.nn.Module): Loss function.
+        optimizer (torch.optim.Optimizer): Optimizer for parameter updates.
+        device (str or torch.device): Device to run computations on.
+
+    Returns:
+        dict: Training history with keys:
+            - "train_loss": list of training losses per epoch
+            - "train_accuracy": list of training accuracies per epoch
+            - "val_loss": list of validation losses per epoch
+            - "val_accuracy": list of validation accuracies per epoch
+    """
     results = {
         "train_loss": [],
         "train_accuracy": [],

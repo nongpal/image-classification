@@ -11,8 +11,28 @@ from src.model import ResNet
 from src.train import fit, test
 from visualize import metrics_plotting, visualize_predictions
 
-def main(path: str, epochs: int, num_workers: int):
+def main(path: str, epochs: int, num_workers: int) -> None:
+    """
+    Train, validate, and test a ResNet model on the Aerial Landscapes dataset.
 
+    This function handles the full training pipeline:
+    - Prepares the dataset (splits into train/val/test if CSV files are missing).
+    - Applies preprocessing transforms (resize, tensor conversion, normalization).
+    - Builds dataloaders for training, validation, and testing.
+    - Initializes the ResNet model, loss function, and optimizer.
+    - Trains the model for a given number of epochs.
+    - Evaluates the trained model on the test set.
+    - Generates and saves training curves (loss and accuracy).
+    - Visualizes and saves prediction results on test samples.
+
+    Args:
+        path (str): Path to the dataset directory (must contain train/val/test CSV files or raw images).
+        epochs (int): Number of training epochs.
+        num_workers (int): Number of worker processes for dataloading.
+
+    Returns:
+        None
+    """
     device = torch.accelerator.current_accelerator().type if torch.accelerator.is_available() else "cpu"
     print(F"Using {device} device.")
 
@@ -55,6 +75,16 @@ def main(path: str, epochs: int, num_workers: int):
     visualize_predictions(model, test_dataloader, classes, device)
 
 if __name__ == "__main__":
+    # Command-line interface (CLI) entry point.
+    # Allows running the training pipeline directly via terminal.
+    #
+    # Arguments:
+    #   --path (str): Path to the dataset directory (must contain train/val/test splits).
+    #   --epochs (int, default=1): Number of training epochs.
+    #   --num_workers (int, default=1): Number of workers for dataloading.
+    #
+    # Example:
+    #   python main.py --path "/path/to/data" --epochs 10 --num_workers 4
     parser = argparse.ArgumentParser()
     parser.add_argument("--path", help="Path to data directory.", type=str)
     parser.add_argument("--epochs", default=1, type=int)

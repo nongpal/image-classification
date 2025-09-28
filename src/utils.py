@@ -2,7 +2,32 @@ import os
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-def make_file(path: str, is_split: bool = False, output_dir: str = "."):
+def make_file(path: str, is_split: bool = False, output_dir: str = ".") -> pd.DataFrame | tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:    
+    """
+    Generate CSV files containing image file paths and labels from a dataset directory.
+
+    This function scans a dataset directory where subfolders correspond to class labels
+    and contain image files (PNG, JPG, JPEG). It creates a DataFrame mapping each image
+    path to its corresponding label and saves it as CSV.
+
+    Args:
+        path (str): Path to the dataset root directory. Each subdirectory inside this
+            path should represent a class and contain its images.
+        is_split (bool, optional): Whether to split the dataset into train/val/test
+            subsets. If True, three CSV files (`train.csv`, `val.csv`, `test.csv`) are
+            generated. If False (default), a single `dataset.csv` file is created.
+        output_dir (str, optional): Directory where the CSV file(s) will be saved.
+            Defaults to the current directory `"."`.
+
+    Returns:
+        pandas.DataFrame | tuple[pandas.DataFrame, pandas.DataFrame, pandas.DataFrame]:
+            - If `is_split=False`: returns the full dataset DataFrame.
+            - If `is_split=True`: returns a tuple of (train_df, val_df, test_df).
+
+    Example:
+        >>> make_file("data/Aerial_Landscapes", is_split=True, output_dir="data/Aerial_Landscapes")
+        (train_df, val_df, test_df)
+    """
     labels = [i for i in os.listdir(path) if os.path.isdir(os.path.join(path, i))]
 
     data_paths = list()
@@ -29,8 +54,3 @@ def make_file(path: str, is_split: bool = False, output_dir: str = "."):
     test_df.to_csv(os.path.join(output_dir, "test.csv"), index=False)
 
     return train_df, val_df, test_df
-
-if __name__ == "__main__":
-    path = "data/Aerial_Landscapes"
-    train_df, val_df, test_df = make_file(path, is_split=True, output_dir="data/Aerial_Landscapes")
-    print("Train:", len(train_df), "Val:", len(val_df), "Test:", len(test_df))
