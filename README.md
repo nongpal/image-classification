@@ -42,8 +42,8 @@ Prediction results on the test dataset:
 ![Prediction Results](assets/predictions.png)
 
 Model learning curve on training:
- - Accuracy
+Accuracy:
 ![Prediction Results](assets/accuracy_curve.png)
 
-- Loss
+Loss:
 ![Prediction Results](assets/loss_curve.png)
