@@ -41,9 +41,8 @@ python train.py --epochs 10
 Prediction results on the test dataset:
 ![Prediction Results](assets/predictions.png)
 
-Model learning curve on training:
-Accuracy:
-![Prediction Results](assets/accuracy_curve.png)
+Accuracy curve:
+![Accuracy Curve](assets/accuracy_curve.png)
 
-Loss:
-![Prediction Results](assets/loss_curve.png)
+Loss curve:
+![Loss Curve](assets/loss_curve.png)
