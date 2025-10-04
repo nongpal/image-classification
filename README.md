@@ -41,8 +41,6 @@ Aerial image classification using ResNet-18 (pretrained) with PyTorch and timm
 Prediction results on the test dataset:
 ![Prediction Results](assets/predictions.png)
 
-Accuracy curve:
 ![Accuracy Curve](assets/accuracy_curve.png)
 
-Loss Curve:
 ![Loss Curve](assets/loss_curve.png)
